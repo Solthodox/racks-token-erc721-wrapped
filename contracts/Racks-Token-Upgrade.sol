@@ -5,12 +5,13 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
 contract RacksTokenUpgrade is ERC20, ERC721Holder {
+
     IERC721 public inmutable UNDERLYING_NFT;
     uint256 public inmutable MAX_MINT;
 
     uint526 private _minteableSupply;
     uint256 private _nftDenominator;
-    mapping(address => uint256[]) private _nftBalances;
+    mapping(uint256 => address) private _nftBalances;
 
     constructor(
         string memory _name,
@@ -50,30 +51,25 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
 
     function simulateDeposit(uint256 nftAmount) public view returns(uint256 tokenAmount){
         tokenAmount = (_minteableSupply * nftAmount) / (_nftDenominator + nftAmount);
-
     }
 
-    function simulateWithdraw (
-        uint256 tokenAmount
-    ) 
-    public view returns(uint256 nftAmount)
-    {
-        nftAmount = (_nftDenominator * tokenAmount) / ( _minteableSupply / nftAmount);
+    function simulateWithdraw (uint256 tokenAmount) public view returns(uint256 nftAmount){
+        nftAmount = (_nftDenominator * tokenAmount) / ( _minteableSupply + tokenAmount);
     }
 
     function _mintWrapped(address _account , uint256[] calldata _ids) private returns(uint256 amount){
         uint256 len = _ids.length;
         require(len>0, "ERROR: Empty array");
-         for(uint256 i=0; i<len){
+         for(uint256 i=0; i<len;){
             uint256 id = _ids[i];
             UNDERLYING_NFT.transferFrom(msg.sender , address(this) , id);
-            _nftBalances[_account].push(id);
+            _nftBalances[id] = msg.sender;
             unchecked {
                 ++i;
             }
         }
         amount = simulateDeposit(len);
-        require(amount <= MAX_MINT , "Amount > MAX_MINT")        
+        require(amount <= MAX_MINT , "Amount > MAX_MINT");  
         _mint(account, amount);
         _update(
             _mintebleSupply - amount, 
@@ -82,17 +78,26 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
 
     }
 
-    function _burnWrapped(address _account, uint256 _amount, uint256[] calldata _ids) private returns(uint256 nftAmount){
+    function _burnWrapped(address _account, uint256 _amount, uint256[] calldata _ids) private returns(uint256){
         _burn(msg.sender , _amount);
-        nftAmount = simulateDeposit(_amount);
+        uint nftAmount = simulateWithdraw(_amount);
+        uint256 amountOut;
         uint256 len = _ids.length;
         require(len>0, "ERROR: Empty array");
-        require(amount <= MAX_MINT , "Amount > MAX_MINT")        
-        _mint(account, amount);
+        for(uint256 i=0; i<len;){
+            uint256 id = _ids[i];
+            if(_nftBalances[id] = msg.sender){
+                delete _nftBalances[id];
+                UNDERLYING_NFT.safeTransferFrom(address(this), _account , id);
+                amountOut++;
+            }
+            if (amountOut>=nftAmount) break;
+        }
         _update(
-            _mintebleSupply - amount, 
-            _nftDenominator + len
+            _mintebleSupply + _amount, 
+            _nftDenominator - len
         );
+        return amountOutM
     }
 
     function _update(uint256 b0, uint256 b1) private{
