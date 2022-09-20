@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
-contract RacksTokenUpgrade is ERC20, ERC721Holder {
-    IERC721Enumerable public inmutable UNDERLYING_NFT; // The asset that allow minting
-    uint256 public inmutable MAX_MINT; // max mint per call
+contract RacksToken is ERC20, ERC721Holder {
+    IERC721Enumerable public UNDERLYING_NFT; // The asset that allow minting
+    uint256 public MAX_MINT; // max mint per call
 
     uint256 private _minteableSupply; // inexistant supply to be minted
     uint256 private _nftDenominator; // starting denominator to calculate tokens per NFT holder = _minteableSupply/_nftDenominator
@@ -23,7 +23,7 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
         _minteableSupply = _minteable_supply;
         _mint(msg.sender, _totalSupply);
         UNDERLYING_NFT = IERC721Enumerable(_nftAddress);
-        _nftDenominator = UNDERLYING_NFT.totalSupply();
+        _nftDenominator = 10000; // 10.000 in MrCrypto
         MAX_MINT = _max_mint;
     }
 
@@ -34,7 +34,7 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
 
     function nftBalance() public view returns (uint256) {
         // we have to substract the initial denominator
-        return _nftDenominator - UNDERLYING_NFT.totalSupply();
+        return _nftDenominator - 10000; // _nftDenominator - 10000 in Mrcrypto
     }
 
     ///
@@ -61,7 +61,7 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
     @notice Deposit tokens and get deposited NFTs back
     @param account : NFTs receiver
     @param ids : ids of NFTs to be withdrawn
-    @param minTokens: minimum amount of NFTs to get back.
+    @param minNfts: minimum amount of NFTs to get back.
     If doesn't fulfill the order, reverts
      */
 
@@ -77,6 +77,7 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
         );
         return true;
     }
+
     /**
     @notice Returns the token amount you get back for a number of
     NFTs at a certain moment.
@@ -104,14 +105,22 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
             (_nftDenominator * tokenAmount) /
             (_minteableSupply + tokenAmount);
     }
+
     /**
     @notice Returns the token input needed to withdraw a certain amount of NFTs
      */
-    function calculateWithdrawalCost(uint256 nftAmount) public view returns(uint256 tokenCost){
-        tokenCost = (_minteableSupply * nftAmount) / (_nftDenominator - nftAmount);
+    function calculateWithdrawalCost(uint256 nftAmount)
+        public
+        view
+        returns (uint256 tokenCost)
+    {
+        tokenCost =
+            (_minteableSupply * nftAmount) /
+            (_nftDenominator - nftAmount);
     }
+
     /**
-    * @dev Mint some tokens using NFTs:
+    *@dev Mint some tokens using NFTs:
         -Transfer all the assets to the contract , save the id's owner in _nftBalances
         - Calculates token amount to get using the constant product invariant(simulateDeposit):
             x * y = k
@@ -121,7 +130,7 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
         - If the amount calculated is > MAX_MINT reverts
         -Mint the tokens
         -Update "balances"
-    * @return true
+    * @return amount 
      */
     function _mintWrapped(address _account, uint256[] calldata _ids)
         private
@@ -142,6 +151,7 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
         _mint(_account, amount);
         _update(_minteableSupply - amount, _nftDenominator + len);
     }
+
     /**
     *@dev Burn the previously minted tokens and get deposited NFTs back:
         -Burn tokens

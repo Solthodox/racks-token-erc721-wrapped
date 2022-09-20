@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
-import "@openzeppelin/contracts/token/ERC271/extentions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+pragma solidity ^0.8.17;
 
-contract MrCryptoMock is ERC721Enumarable {
+contract MrCryptoMock is ERC721Enumerable {
     constructor() ERC721("MrCrypto ...", "MRC") {}
 
     function mint(address receiver, uint256 id) public {
