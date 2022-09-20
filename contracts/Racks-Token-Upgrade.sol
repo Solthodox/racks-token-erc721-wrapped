@@ -111,7 +111,17 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
         tokenCost = (_minteableSupply * nftAmount) / (_nftDenominator - nftAmount);
     }
     /**
-    * @dev 
+    * @dev Mint some tokens using NFTs:
+        -Transfer all the assets to the contract , save the id's owner in _nftBalances
+        - Calculates token amount to get using the constant product invariant(simulateDeposit):
+            x * y = k
+            (x + dx) * y = k
+            y' = k / (x + dx)
+            dy = y - y'
+        - If the amount calculated is > MAX_MINT reverts
+        -Mint the tokens
+        -Update "balances"
+    * @return true
      */
     function _mintWrapped(address _account, uint256[] calldata _ids)
         private
@@ -133,6 +143,12 @@ contract RacksTokenUpgrade is ERC20, ERC721Holder {
         _update(_minteableSupply - amount, _nftDenominator + len);
     }
     /**
+    *@dev Burn the previously minted tokens and get deposited NFTs back:
+        -Burn tokens
+        -Calculate NFT amount
+        - Loop through provided Ids and transfer to owner
+        - Update "balances"
+    @return true
      */
     function _burnWrapped(
         address _account,
