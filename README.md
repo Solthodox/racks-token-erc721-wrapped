@@ -39,7 +39,8 @@ It consists in a regular ERC20 token with some added extra funtionalities , only
  ```
  
  As we can see, the user got 199.6/2 = 99.98 tokens per NFT which is very approximate to the 100 theorical tokens.
- But if we calculate the most extreme case, where a user owns all the 10000 MrCrypto, this is what he would get 500000 tokens, which equals to 50 tokens per NFT. This  is a half of what the first user got, which means he will pay a exorbitant price for causing inflation in the token.
+ 
+But if we calculate the most extreme case, where a user owns all the 10000 MrCrypto, this is what he would get : 500000 tokens, which equals to 50 tokens per NFT. This  is a half of what the first user got, which means he will pay a exorbitant price for causing inflation in the token, and even having used all the NFTs, he only got half of the minteable supply. Anyways, as the token starts to be overminted, the hodlers will start to withdraw their NFTs as it becomes simultanously cheaper, even making litle profits, causing a deflationary pressure. This makes the system work similar to how a market maker does.
  
  
  
