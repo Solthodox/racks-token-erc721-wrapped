@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const toEther = n => hre.ethers.parseEther(n.toString() , "ether")
+const toEther = n => hre.ethers.parseUnits(n.toString() , "ether")
 
 async function main() {
   const RacksToken = hre.ethers.getContractFactory("RacksToken")
