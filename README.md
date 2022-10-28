@@ -1,6 +1,6 @@
-# ERC721 Wrapped Racks Token
+# ERC721 Wrapped Token
 
-This is a token wrap ERC20 variation. It allows to mint tokens using NFTs instead of another tokens. This could be an interesting proposal for the upcoming Racks Token, since it has a strong community built around the MrCrypto NFT collection.
+This is a token wrap ERC20 variation. It allows to mint tokens using NFTs instead of another tokens. This could be an interesting proposal for the upcoming any project that owns NFTs and tokens as well.
 
 ## General overview
 
@@ -23,7 +23,7 @@ It consists in a regular ERC20 token with some added extra funtionalities , only
   x * y = k
   10000 * 1000000 = 10 ** 10 // 10^10
  ```
- So if a little hodler wants to mint some NFTs, the slippage will be almost 0 for him, lets say he deposits 3 NFTs in the very beginning: 
+ So if a little hodler wants to mint some NFTs, the slippage will be almost 0 for him, lets say he deposits 2 NFTs in the very beginning: 
  
  ```
   dx = 2 // dx = amount in
@@ -40,7 +40,7 @@ It consists in a regular ERC20 token with some added extra funtionalities , only
  
  As we can see, the user got 199.6/2 = 99.98 tokens per NFT which is very approximate to the 100 theorical tokens.
  
-But if we calculate the most extreme case, where a user owns all the 10000 MrCrypto, this is what he would get : 500000 tokens, which equals to 50 tokens per NFT. This  is a half of what the first user got, which means he will pay a exorbitant price for causing inflation in the token, and even having used all the NFTs, he only got half of the minteable supply. Anyways, as the token starts to be overminted, the hodlers will start to withdraw their NFTs as it becomes simultanously cheaper, even making litle profits, causing a deflationary pressure. This makes the system work similar to how a market maker does.
+But if we calculate the most extreme case, where a user owns all the 10000 NFTs of the collecion, this is what he would get : 500000 tokens, which equals to 50 tokens per NFT. This  is a half of what the first user got, which means he will pay a exorbitant price for causing inflation in the token, and even having used all the NFTs, he only got half of the minteable supply. Anyways, as the token starts to be overminted, the hodlers will start to withdraw their NFTs as it becomes simultanously cheaper, even making litle profits, causing a deflationary pressure. This makes the system work similar to how a market maker does.
  
  
  
@@ -50,7 +50,7 @@ This implementation aims to add more value to the community and the token itself
 
   * Diamond hands💎: Users wont't need to lose their positions in their crypto investments to aquire the token: No need to buy other tokens, no need to sell their NFT; just mint it directly from the contract.
   
-  * Back MrCrypto with more value: This will undoubtedly give a extra advantage to the hodlers in the defi markets, as having one NFT means instantly having access to a certain amount of tokens and if the token grows it simultaneously adds value to the collection. 
+  * Back NFT collection with more value: This will undoubtedly give a extra advantage to the hodlers in the defi markets, as having one NFT means instantly having access to a certain amount of tokens and if the token grows it simultaneously adds value to the collection. 
   
   * Innovation⭐: This will add extra value to the token itself.
   
